@@ -2,11 +2,10 @@
 <img src="https://i.imgur.com/pU5A58S.png" alt="Microsoft Active Directory Logo"/>
 </p>
 
-<h1>On-premises Active Directory Deployed in the Cloud (Azure)</h1>
-This tutorial outlines the implementation of on-premises Active Directory within Azure Virtual Machines.<br />
-
-
-
+<h1>Build an Active Directory</h1>
+Active Directory (AD) is a Microsoft-developed directory service that helps manage users, devices, and network resources on Windows domain networks. In this project, we will use two VMs, one as the server and the other as the client. In an enterprise scenario, the client would be like the computer an employee would log in to as their user to operate.<br />
+<br>
+The link to the VM project to build a virtual machine is https://github.com/brandenoz/virtual-machine. 
 
 <h2>Environments and Technologies Used</h2>
 
