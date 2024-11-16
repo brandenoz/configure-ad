@@ -71,7 +71,7 @@ Click Start and click on Active Directory Users and Computers.
 - Right-click on the Start icon and click about > make full screen > click on Rename this PC (advanced) > Under the Computer Name tab click Change... > Select domain under Member of and type: mydomain.com > click OK > Click Apply > Click OK. 
 - This will require the PC to restart. Go ahead and let it restart. Log back in afterwards. <br>
 
-[9]
+![9](https://github.com/user-attachments/assets/74ef22e5-a148-4cc1-8aa2-9074a9e04b4c)
 
 <h3>Step _: Verify Domain Change</h3> 
 
@@ -132,7 +132,7 @@ Click Start, type run, press Enter, type gpmc.msc, press Enter.
 - Logout of Clinet-1 as Jane admin so we can attempt login failures for dog.fomi to trigger account lockout. 
 - Attempt logging into Client-1 as dog.fomi with the wrong password at least 6 times until achieved account lockout. <br>
 
-[16]
+![16](https://github.com/user-attachments/assets/1351a6e5-4cf6-409c-ae5d-a3de0f517c7e)
 
 - Now go into DC-1 as Jane Admin, Open Active Directory and locate the user dog.fomi in my case. Doubleclick on the user to open properties, go to account, check the box next to Unlock account. > Apply > Okay. 
 - Attempt to login as dog.fomi and gain access to Client-1. 
@@ -150,7 +150,7 @@ To see the logon failure logs, we will need to look for them on the Client-1 com
 - Press Start Windows Key, type eventvwr.msc, right-click, and open it as Admin. A normal user like dog.fomi would not be able to view the events without admin access. We will need to open the Event Viewer as an admin using Jane's admin credentials. 
 - Once in the Event Viewer, under Windows Logs, click Security. Right-click on Security and click Find... > type your user's name, mine is dog.fomi. Continue to click Find Next until you get to entries listed under Task Category that show continued failed login attempts. <br>
 
-[17-edit]
+![17](https://github.com/user-attachments/assets/480ead83-86de-4195-a9df-06d136e69534)
 
 This completes the project of setting up an active directory and executing functions such as initiating account activation after password attempt failures lock the user out. 
 
