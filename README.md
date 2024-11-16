@@ -7,47 +7,156 @@ Active Directory (AD) is a Microsoft-developed directory service that helps mana
 <br>
 The link to the VM project to build a virtual machine is https://github.com/brandenoz/virtual-machine. 
 
-<h2>Environments and Technologies Used</h2>
+<h2>Requirements</h2>
+- Good internet connection.
+- Microsoft Azure account unless using physical PCs. 
 
-- Microsoft Azure (Virtual Machines/Compute)
-- Remote Desktop
-- Active Directory Domain Services
-- PowerShell
+<h2>Configuration Steps</h2>
+<h3>Step 1: Set Up Virtual Environment</h3>
 
-<h2>Operating Systems Used </h2>
+Begin by opening Microsoft Azure. Make sure that all resources are set to the same region. I will be using East US. When we are done with this step, our resources will look something like this: (see screenshot). 
+<br>
 
-- Windows Server 2022
-- Windows 10 (21H2)
+![1](https://github.com/user-attachments/assets/02c48e8d-b9b3-4174-9cf7-6067fbc79ec4)
 
-<h2>High-Level Deployment and Configuration Steps</h2>
+- Create a Resource Group named Active-Directory-Lab. 
+- Create a Virtual Network named Active-Directory-VNet. (make sure 
+- Create a Virtual Machine (computer) named DC-1. Choose for the image Windows Server 2022 Datacenter. Choose for the size at least 2 VCPUs as less could make it slow to operate. Set your username and password to something that you can easily remember. Record the credentials on a saved note. I will be using labuser and Cyberlab123! as credentials. 
+- Under Networking, choose for the virtual network the one we created, Active-Directory-VNet. 
+- Create a new virtual machine for the client/employee computer named Client-1. Choose for the image Windows 10 Pro. For the size choose at least 2 VCPUs which it might default to. Use the same credentials for simplicity. Make sure to check the box under licensing before moving beyond this page. This is very important. For Networking, make sure to use the virtual private network previously created. 
+- In VM DC1, change the IP address in the Virtual Network Interface Card, VNIC to be static. <br>
 
-- Step 1
-- Step 2
-- Step 3
-- Step 4
+![2](https://github.com/user-attachments/assets/b00587c8-d6ed-44e9-b3bd-513df62c8a2b)
 
-<h2>Deployment and Configuration Steps</h2>
+<h3>Step 2: Disable Firewall</h3>
 
-<p>
-<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-</p>
-<p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-</p>
-<br />
+Get the Public IP Address of the VM DC-1. Use Remote Desktop Connection to login to our domain controller. 
+- Right-click the Start menu and select run. Type wf.msc for Windows Firewall. Click on Windows Defender Firewall Properties. Next to Firewall State: switch to off. Do this for Domain Profile, Private Profile and Public Profile, then Apply > Okay. 
+- Change the DNS settings of VM Client-1’s Virtual Network Interface Card to be custom rather than dynamic. We will paste the private IP Address of DC-1. This effectively points Client-1’s DNS to DC-1. Save. <br>
 
-<p>
-<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-</p>
-<p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-</p>
-<br />
+![3](https://github.com/user-attachments/assets/59615359-0b0b-481b-9642-d6c730e1b016)
 
-<p>
-<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-</p>
-<p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-</p>
-<br />
+- Restart Client-1. Login to Client-1 using the Public IP Address and Remote Desktop Connection. 
+- Open Windows PowerShell and type ping 10.0.0.4 to make sure you can make a connection. <br> 
+
+[4-edit]
+
+<h3>Step 3: Make the Server a Domain Controller</h3> 
+
+In Server Manager, click Add roles and features. Click Next > Next > Next > Active Directory Domain Services > Add Features > Next > Next > Next > Restart the destination server automatically if required > Yes > Install > (once installed) Click Close. 
+- Click the flag in the upper right corner of Server Manager on DC-1, click Promote this Server to a Domain Controller. 
+- Click Add a new forest > Type in the Root domain name: mydomain.com > Next > Password: Cyberlab123! > Next > Check and uncheck "Create DNS delegation" then click Next > Next > Next > Next > Install (wait to be installed). This action will cause the VM to restart. You will have to log back in after. 
+
+<h3>Step 4: Log In to Domain Controller</h3> 
+
+Not that DC-1 is a Domain Controller, loggin in requires context to be specified. 
+- Using Remote Desktop Connection and the VM’s public IP address. 
+- For the username: “mydomain.com\labuser”. <br>
+
+[5]
+
+Our server, DC-1, is now a Domain Controller, and we are logged back into DC-1. 
+
+<h3>Step 5: Create a Domain Admin, Jane</h3> 
+
+Click Start and click on Active Directory Users and Computers.
+- Put Jane Doe with user logon name as jane_admin and click next.  
+- Right-click on Jane Doe, properties > member of > add > Domain Admins (check names) > OK > Apply > OK. 
+- Now logout of this admin account. 
+
+<h3>Step 6: Change the Domain of Client-1</h3>
+
+- Log into DC-1 as Jane Admin. 
+- Log into Client-1 as labuser. 
+- Right-click on the Start icon and click about > make full screen > click on Rename this PC (advanced) > Under the Computer Name tab click Change... > Select domain under Member of and type: mydomain.com > click OK > Click Apply > Click OK. 
+- This will require the PC to restart. Go ahead and let it restart. Log back in afterwards. <br>
+
+[9]
+
+<h3>Step _: Verify Domain Change</h3> 
+
+- Go back into DC-1, Go to Active Directory Users and Computers. 
+- Click on mydomain.com > Computers > double-click Client-1 to open properties > Observe under Operating System that this computer is running Windows 10 Pro. <br>
+
+[10-edit]
+
+- Create a new Organizational Unit called _CLIENTS. 
+- Drag Clinet-1 from Computers to _CLIENTS > click Yes. Right-click on mydomain.com and click Refresh. 
+
+<h3>Step _: Allow Remote Access for Employees to Client-1</h3>
+
+- In Client-1, the employee computer, right-click the Start Menu and go to System, make full-screen and click on Remote Desktop > Click Select users that can remotely access this PC > Click Add > Type: "Domain Users" (check names) > OK > OK. 
+
+<h3>Step _: Create Users</h3>
+
+- Open DC-1 as Jane admin. 
+- Open Windows PowerShell ISE as an Admin. Click on Scripts in the upper-right corner to open a script box. 
+- Go to this link to copy a script for powershell that will create users: https://github.com/joshmadakor1/AD_PS/blob/master/Generate-Names-Create-Users.ps1. 
+- Paste the script into the white script area 
+- (optional) In line 3 of the script, you cn see 10,000 users is the amount set. You can change this to 100 to make this process a bit shorter. 
+- Click the green button for Run Script. <br>
+
+[11-edit] 
+
+- Go back to the Active Directory, refresh mydomain.com, click on _EMPLOYEES. Choose an employee name that will be easy to remember. If you are following this lab, my users will be completely different than yours are. So whichever I choose will not likely be an option for you so choose one that easy to remember. 
+- I will choose dog.fomi becuase this one is silly. <br>
+
+[12-edit]
+
+- Log out of Client-1. Log back in with your selected employee user, mine is dog.fomi. Username: mydomain.com\dog.fomi, password is Password1. 
+
+<h3>Login as Employee</h3>
+
+Once logged into Client-1 as user dog.fomi, open Command Prompt. You will see that the use is registered in Command Prompt as dog.fomi. 
+- Open File Explorer, go to the C drive, users, and observe dog.fomi as an accessible folder. Also notice that other folders may not be able to be opened without admin access and dog.fomi is not an admin. 
+- Logout. 
+
+<h3>Update Group Policy for Account Lockout after Password Attempt Failure</h3>
+
+Click Start, type run, press Enter, type gpmc.msc, press Enter. 
+- Click the drop-down under Forest: mydomain.com, then Domains, then mydomain.com, right-click on Default Domain Policy, click on Computer Configurtion. <br>
+
+[13-edit] 
+
+- Click the drop-down under Policies, then for Windows Settings, Account Policies, Account Lockout Policy. 
+- Set the lockout duration to 30 minutes. 
+- Make sure Account lockout threshold is set to 5 invalid logon attempts. 
+- To see the updated Group Policy go to the Group Policy Management window, click Default Domain Policy, scroll down to Computer Configuration and you will see the settings we adjusted for password lockout. (see screenshot) <br>
+
+[14-edit]
+
+-Log into Client-1 as Jane Admin and pull up Command Prompt, type in gpupdate /force, press enter. You will get a successful message letting you know that group policy has updated. <br>
+
+[15-edit]
+ 
+- Logout of Clinet-1 as Jane admin so we can attempt login failures for dog.fomi to trigger account lockout. 
+- Attempt logging into Client-1 as dog.fomi with the wrong password at least 6 times until achieved account lockout. <br>
+
+[16]
+
+- Now go into DC-1 as Jane Admin, Open Active Directory and locate the user dog.fomi in my case. Doubleclick on the user to open properties, go to account, check the box next to Unlock account. > Apply > Okay. 
+- Attempt to login as dog.fomi and gain access to Client-1. 
+We have now successfully reset a password as admin for a user that locked themselves out due to too many wrong password attempts. 
+
+From this Active Directory, depending on the needs of your organizaiton, we can disable an account. Example, someone getting fired, etc. You may need to disable an account immediately. 
+
+- After logging into Client-1 as Jane Admin, open Command Prompt, type gpupdate /force. You will get a confirmation of success. <br> 
+
+[14-edit]
+
+<h3>Step _: Check Event Logs</h3>
+
+To see the logon failure logs, we will need to look for them on the Client-1 computer where they occurred. 
+- Press Start Windows Key, type eventvwr.msc, right-click, and open it as Admin. A normal user like dog.fomi would not be able to view the events without admin access. We will need to open the Event Viewer as an admin using Jane's admin credentials. 
+- Once in the Event Viewer, under Windows Logs, click Security. Right-click on Security and click Find... > type your user's name, mine is dog.fomi. Continue to click Find Next until you get to entries listed under Task Category that show continued failed login attempts. <br>
+
+[17-edit]
+
+This completes the project of setting up an active directory and executing functions such as initiating account activation after password attempt failures lock the user out. 
+
+<h3>The End, Cleaning Up</h3>
+
+This was a very long project, and you may want to experiment with many more things that can be done with Active Directory. 
+- If you are done, as always, we will clean up. 
+- If you are just done for now, make sure to pause both of our virtual machines from Azure and confirm they have been stopped successfully. This will save some of your resources. 
+- If you are permanently done with these resources, delete the resource group which will remove DC-1 and Clinet-1 VMs with it, and wait for a notification of successful completion. Afterwards, you can navigate to resource groups and virtual machines to ensure our resources were successfully deleted. 
