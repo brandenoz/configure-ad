@@ -77,7 +77,7 @@ Click Start and click on Active Directory Users and Computers.
 
 ![9](https://github.com/user-attachments/assets/74ef22e5-a148-4cc1-8aa2-9074a9e04b4c)
 
-<h3>Step _: Verify Domain Change</h3> 
+<h3>Step 7: Verify Domain Change</h3> 
 
 - Go back into DC-1, and Go to Active Directory Users and Computers. 
 - Click on mydomain.com > Computers > double-click Client-1 to open properties > Observe under Operating System that this computer is running Windows 10 Pro. <br>
@@ -87,11 +87,11 @@ Click Start and click on Active Directory Users and Computers.
 - Create a new Organizational Unit called _CLIENTS. 
 - Drag Clinet-1 from Computers to _CLIENTS > click Yes. Right-click on mydomain.com and click Refresh. 
 
-<h3>Step _: Allow Remote Access for Employees to Client-1</h3>
+<h3>Step 8: Allow Remote Access for Employees to Client-1</h3>
 
 - In Client-1, the employee computer, right-click the Start Menu and go to System, make full-screen, and click on Remote Desktop > Click Select users that can remotely access this PC > Click Add > Type: "Domain Users" (check names) > OK > OK. 
 
-<h3>Step _: Create Users</h3>
+<h3>Step 9: Create Users</h3>
 
 - Open DC-1 as Jane admin. 
 - Open Windows PowerShell ISE as an Admin. Click on Scripts in the upper-right corner to open a script box. 
@@ -109,13 +109,13 @@ Click Start and click on Active Directory Users and Computers.
 
 - Log out of Client-1. Log back in with your selected employee user, mine is dog.fomi. Username: mydomain.com\dog.fomi, password is Password1. 
 
-<h3>Login as Employee</h3>
+<h3>Step 10: Login as Employee</h3>
 
 Once logged into Client-1 as user dog.fomi, open Command Prompt. You will see that the use is registered in Command Prompt as dog.fomi. 
 - Open File Explorer, go to the C drive, users, and observe dog.fomi as an accessible folder. Also, notice that other folders may not be able to be opened without admin access, and dog.fomi is not an admin. 
 - Logout. 
 
-<h3>Update Group Policy for Account Lockout after Password Attempt Failure</h3>
+<h3>Step 11: Update Group Policy for Account Lockout after Password Attempt Failure</h3>
 
 Click Start, type run, press Enter, and type gpmc.msc, press Enter. 
 - Click the drop-down under Forest: mydomain.com, then Domains, then mydomain.com, right-click on Default Domain Policy, and click on Computer Configuration. <br>
@@ -129,7 +129,7 @@ Click Start, type run, press Enter, and type gpmc.msc, press Enter.
 
 ![14](https://github.com/user-attachments/assets/c2412b96-2e28-4f7c-a169-d386298102ba)
 
--Log into Client-1 as Jane Admin and pull up Command Prompt, type in gpupdate /force, and press enter. You will get a successful message letting you know that the group policy has been updated. <br>
+- Log into Client-1 as Jane Admin and pull up Command Prompt, type in gpupdate /force, and press enter. You will get a successful message letting you know that the group policy has been updated. <br>
 
 ![15](https://github.com/user-attachments/assets/affcff2b-ee3c-436a-a2d8-ccdcb9456ba2)
  
@@ -146,9 +146,7 @@ From this Active Directory, depending on the needs of your organization, we can 
 
 - After logging into Client-1 as Jane Admin, open Command Prompt, type gpupdate /force. You will get a confirmation of success. <br> 
 
-[14-edit]
-
-<h3>Step _: Check Event Logs</h3>
+<h3>Step 12: Check Event Logs</h3>
 
 To see the logon failure logs, we will need to look for them on the Client-1 computer where they occurred. 
 - Press Start Windows Key, type eventvwr.msc, right-click, and open it as Admin. A normal user like dog.fomi would not be able to view the events without admin access. We will need to open the Event Viewer as an admin using Jane's admin credentials. 
@@ -158,7 +156,7 @@ To see the logon failure logs, we will need to look for them on the Client-1 com
 
 This completes the project of setting up an active directory and executing functions such as initiating account activation after password attempt failures lock the user out. 
 
-<h3>The End, Cleaning Up</h3>
+<h3>Step 13: Cleaning Up</h3>
 
 This was a very long project, and you may want to experiment with many more things that can be done with Active Directory. 
 - If you are done, as always, we will clean up. 
