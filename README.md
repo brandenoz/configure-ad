@@ -7,8 +7,16 @@ Active Directory (AD) is a Microsoft-developed directory service that helps mana
 <br>
 The link to the VM project to build a virtual machine is https://github.com/brandenoz/virtual-machine. 
 
+Highlights of what we will be doing: 
+- Turning a Windows Server into a Domain Controller
+- Managing Client computers and users like an enterprise would
+- Pointing client computer to the domain controller using a domain
+- Updating group policy to lock account after 5 wrong password login attempts
+- Unlocking an account after continuous failure of login attempts
+- Viewing Event Logs on the client computer to view failed login attempts
+
 <h2>Requirements</h2>
-- Good internet connection.
+- Good internet connection. <br>
 - Microsoft Azure account unless using physical PCs. 
 
 <h2>Configuration Steps</h2>
